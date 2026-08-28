@@ -14,7 +14,7 @@ const boysHostels: CampusBuilding[] = Array.from({ length: 25 }, (_, i) => {
   const campusNum = num <= 6 ? 1 : num <= 12 ? 3 : num <= 18 ? 12 : num <= 22 ? 15 : 20;
   
   // Specific simulated loads & anomalies
-  const isAnomaly = num === 7 || num === 19;
+  const isAnomaly = false;
   const currentLoad = isAnomaly 
     ? (num === 7 ? 32.4 : 29.8) 
     : Number((14.5 + ((num * 7) % 11) * 1.1).toFixed(1));
@@ -61,7 +61,7 @@ const girlsHostels: CampusBuilding[] = Array.from({ length: 25 }, (_, i) => {
   const code = `QC-${num}`;
   const campusNum = num <= 6 ? 2 : num <= 12 ? 6 : num <= 18 ? 14 : num <= 22 ? 17 : 24;
 
-  const isAnomaly = num === 14;
+  const isAnomaly = false;
   const currentLoad = isAnomaly 
     ? 31.6 
     : Number((13.8 + ((num * 9) % 10) * 1.15).toFixed(1));
