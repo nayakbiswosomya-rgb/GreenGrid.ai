@@ -1,0 +1,6 @@
+{
+  "name": "GreenGridAI - Smart Energy Management",
+  "description": "AI-powered smart renewable microgrid management, real-time power dispatch simulation, predictive load forecasting, and demand-response optimization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
