@@ -12,9 +12,11 @@ import {
   Building2,
   CheckCircle2,
   TrendingUp,
-  Clock
+  Clock,
+  Award
 } from 'lucide-react';
 import { GridTelemetry, SystemModeType, UserProfile } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HeroStatusAreaProps {
   telemetry: GridTelemetry;
@@ -35,6 +37,7 @@ export const HeroStatusArea: React.FC<HeroStatusAreaProps> = ({
   onOpenSubscriptionModal,
   onOpenPitchModal,
 }) => {
+  const { t, language } = useLanguage();
   const cleanEnergyPercent = telemetry.loadKw > 0 
     ? Math.min(100, Math.round((telemetry.solarKw / telemetry.loadKw) * 100))
     : 100;
@@ -56,42 +59,39 @@ export const HeroStatusArea: React.FC<HeroStatusAreaProps> = ({
           <div className="flex items-center gap-2.5 flex-wrap">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 backdrop-blur-md shadow-sm">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span>AI SYSTEM ONLINE</span>
+              <span>{t.systemOnline}</span>
             </div>
 
-            <span className="text-slate-400 text-xs flex items-center gap-1 font-mono">
-              <Clock className="w-3.5 h-3.5 text-slate-500" />
-              Last updated: <span className="text-slate-300 font-semibold">Just now</span>
-            </span>
+            {/* Smart India Hackathon badge */}
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+              <Award className="w-3.5 h-3.5 text-amber-400" />
+              <span>{t.sihContextBadge}</span>
+            </div>
 
             <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-white/[0.04] text-slate-300 border border-white/[0.08]">
               <Building2 className="w-3 h-3 text-emerald-400" />
               <span className="truncate max-w-[150px] sm:max-w-[220px]">{currentUser.facility}</span>
             </div>
-
+            
             <button
               onClick={() => document.getElementById('section-weather')?.scrollIntoView({ behavior: 'smooth' })}
-              title="View 7-Day Solar & Weather Forecast"
+              title={language === 'hi' ? '7-दिवसीय सौर और मौसम पूर्वानुमान देखें' : 'View 7-Day Solar & Weather Forecast'}
               aria-label="View 7-Day Solar & Weather Forecast"
               className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition cursor-pointer"
             >
               <Sun className="w-3 h-3 text-amber-400" />
               <span>{telemetry.weather}: {telemetry.irradiance} W/m²</span>
-              <span className="text-[10px] text-amber-400 font-bold ml-0.5">Forecast →</span>
+              <span className="text-[10px] text-amber-400 font-bold ml-0.5">{language === 'hi' ? 'पूर्वानुमान' : 'Forecast'} →</span>
             </button>
           </div>
 
           {/* Heading */}
           <div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white flex items-center gap-3">
-              Campus Energy Intelligence
+              {t.heroHeading}
             </h1>
-            <p className="text-sm sm:text-base text-slate-300 mt-1 font-medium flex items-center gap-2">
-              <span className="text-emerald-400 font-semibold">Predict.</span>
-              <span className="text-cyan-400 font-semibold">Optimize.</span>
-              <span className="text-teal-400 font-semibold">Control.</span>
-              <span className="text-slate-500 hidden sm:inline">•</span>
-              <span className="text-slate-400 text-xs sm:text-sm hidden sm:inline">Autonomous renewable microgrid dispatch for educational campuses</span>
+            <p className="text-sm sm:text-base text-slate-300 mt-1 font-medium">
+              {t.heroSubheading}
             </p>
           </div>
 
@@ -122,15 +122,19 @@ export const HeroStatusArea: React.FC<HeroStatusAreaProps> = ({
               <div className="text-left">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-                    AI Energy Autopilot
+                    {language === 'hi' ? 'एआई ऊर्जा ऑटोपायलट' : 'AI Energy Autopilot'}
                   </span>
                   <span className={`w-2 h-2 rounded-full ${isAutopilotActive ? 'bg-emerald-400 animate-ping' : 'bg-slate-500'}`} />
                 </div>
                 <div className="text-sm font-bold text-white flex items-center gap-1.5">
                   {isAutopilotActive ? (
-                    <span className="text-emerald-400 font-mono">AUTONOMOUS ACTIVE</span>
+                    <span className="text-emerald-400 font-mono">
+                      {language === 'hi' ? 'स्वायत्त नियंत्रण चालू' : 'AUTONOMOUS ACTIVE'}
+                    </span>
                   ) : (
-                    <span className="text-slate-400 font-mono">MANUAL OVERRIDE</span>
+                    <span className="text-slate-400 font-mono">
+                      {language === 'hi' ? 'मैनुअल ओवरराइड' : 'MANUAL OVERRIDE'}
+                    </span>
                   )}
                 </div>
               </div>
@@ -156,7 +160,7 @@ export const HeroStatusArea: React.FC<HeroStatusAreaProps> = ({
         <div className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] backdrop-blur-md border border-white/[0.06] transition">
           <span className="text-slate-400 block text-[11px] flex items-center gap-1">
             <IndianRupee className="w-3.5 h-3.5 text-emerald-400" />
-            Today's Net Savings
+            {t.dailySavings}
           </span>
           <div className="mt-1 flex items-baseline gap-1">
             <span className="text-lg font-bold text-emerald-300">
@@ -164,13 +168,15 @@ export const HeroStatusArea: React.FC<HeroStatusAreaProps> = ({
             </span>
             <span className="text-[10px] text-emerald-400 font-semibold">↑ 18.5%</span>
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block font-sans">vs standard tariff baseline</span>
+          <span className="text-[10px] text-slate-500 mt-0.5 block font-sans">
+            {language === 'hi' ? 'मानक टैरिफ बेसलाइन की तुलना में' : 'vs standard tariff baseline'}
+          </span>
         </div>
 
         <div className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] backdrop-blur-md border border-white/[0.06] transition">
           <span className="text-slate-400 block text-[11px] flex items-center gap-1">
             <Leaf className="w-3.5 h-3.5 text-teal-400" />
-            Carbon Avoided
+            {t.carbonAvoided}
           </span>
           <div className="mt-1 flex items-baseline gap-1">
             <span className="text-lg font-bold text-teal-300">
@@ -178,29 +184,33 @@ export const HeroStatusArea: React.FC<HeroStatusAreaProps> = ({
             </span>
             <span className="text-[10px] text-teal-400 font-semibold">CO₂e</span>
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block font-sans">~24 mature trees planted</span>
+          <span className="text-[10px] text-slate-500 mt-0.5 block font-sans">
+            {language === 'hi' ? '~24 परिपक्व पेड़ लगाने के बराबर' : '~24 mature trees planted'}
+          </span>
         </div>
 
         <div className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] backdrop-blur-md border border-white/[0.06] transition">
           <span className="text-slate-400 block text-[11px] flex items-center gap-1">
             <Sun className="w-3.5 h-3.5 text-amber-400" />
-            Clean Self-Sufficiency
+            {t.cleanEnergyRatio}
           </span>
           <div className="mt-1 flex items-baseline gap-1">
             <span className="text-lg font-bold text-amber-300">
               {cleanEnergyPercent}%
             </span>
             <span className="text-[10px] text-amber-400 font-semibold">
-              {cleanEnergyPercent >= 100 ? 'Zero-Carbon' : 'Solar + BESS'}
+              {cleanEnergyPercent >= 100 ? (language === 'hi' ? 'शून्य कार्बन' : 'Zero-Carbon') : 'Solar + BESS'}
             </span>
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block font-sans">Direct clean consumption</span>
+          <span className="text-[10px] text-slate-500 mt-0.5 block font-sans">
+            {language === 'hi' ? 'प्रत्यक्ष स्वच्छ ऊर्जा खपत' : 'Direct clean consumption'}
+          </span>
         </div>
 
         <div className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] backdrop-blur-md border border-white/[0.06] transition">
           <span className="text-slate-400 block text-[11px] flex items-center gap-1">
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
-            Active Grid Tariff
+            {language === 'hi' ? 'वर्तमान ग्रिड टैरिफ' : 'Active Grid Tariff'}
           </span>
           <div className="mt-1 flex items-baseline gap-1">
             <span className="text-lg font-bold text-cyan-300">
@@ -208,7 +218,9 @@ export const HeroStatusArea: React.FC<HeroStatusAreaProps> = ({
             </span>
             <span className="text-[10px] text-slate-400">ToD</span>
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block font-sans">Peak window arbitrage armed</span>
+          <span className="text-[10px] text-slate-500 mt-0.5 block font-sans">
+            {language === 'hi' ? 'पीक ऑवर आर्बिट्राज सक्रिय' : 'Peak window arbitrage armed'}
+          </span>
         </div>
 
       </div>

@@ -16,10 +16,12 @@ import {
   LayoutDashboard,
   BrainCircuit,
   Sliders,
-  BarChart2
+  BarChart2,
+  Languages
 } from 'lucide-react';
 import { GreenGridLogo } from './GreenGridLogo';
 import { WeatherCondition, SystemModeType, UserProfile, NavigationView } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
   currentView: NavigationView;
@@ -52,18 +54,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenSubscriptionModal,
   onLogout,
 }) => {
+  const { language, toggleLanguage, t } = useLanguage();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const navItems: { id: NavigationView; label: string; sectionId: string; icon: React.ReactNode }[] = [
-    { id: 'overview', label: 'Overview', sectionId: 'section-overview', icon: <LayoutDashboard className="w-3.5 h-3.5" /> },
-    { id: 'autopilot', label: 'AI Autopilot', sectionId: 'section-autopilot', icon: <BrainCircuit className="w-3.5 h-3.5" /> },
-    { id: 'weather', label: 'Weather & Solar', sectionId: 'section-weather', icon: <Sun className="w-3.5 h-3.5 text-amber-400" /> },
-    { id: 'digital_twin', label: 'Digital Twin', sectionId: 'section-digital-twin', icon: <Building2 className="w-3.5 h-3.5" /> },
-    { id: 'scenarios', label: 'What-If Lab', sectionId: 'section-scenarios', icon: <Sliders className="w-3.5 h-3.5" /> },
-    { id: 'analytics', label: 'Analytics', sectionId: 'section-analytics', icon: <BarChart2 className="w-3.5 h-3.5" /> },
+    { id: 'overview', label: t.navOverview, sectionId: 'section-overview', icon: <LayoutDashboard className="w-3.5 h-3.5" /> },
+    { id: 'autopilot', label: t.navAutopilot, sectionId: 'section-autopilot', icon: <BrainCircuit className="w-3.5 h-3.5" /> },
+    { id: 'weather', label: t.navWeather, sectionId: 'section-weather', icon: <Sun className="w-3.5 h-3.5 text-amber-400" /> },
+    { id: 'digital_twin', label: t.navDigitalTwin, sectionId: 'section-digital-twin', icon: <Building2 className="w-3.5 h-3.5" /> },
+    { id: 'scenarios', label: t.navScenarios, sectionId: 'section-scenarios', icon: <Sliders className="w-3.5 h-3.5" /> },
+    { id: 'analytics', label: t.navAnalytics, sectionId: 'section-analytics', icon: <BarChart2 className="w-3.5 h-3.5" /> },
   ];
 
   // Check scroll boundary to show/hide subtle left & right fade indicators
@@ -214,7 +217,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Weather Scenario Simulator */}
           <div className="flex items-center bg-black/40 backdrop-blur-md rounded-xl p-1 border border-white/[0.08] text-xs font-mono shrink-0">
             <span className="text-slate-500 px-2 flex items-center gap-1 font-medium text-[11px]">
-              ENV:
+              {t.envLabel}
             </span>
             <button
               id="btn-weather-sunny"
@@ -226,7 +229,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <Sun className="w-3.5 h-3.5" />
-              <span>Sunny</span>
+              <span>{t.weatherSunny}</span>
             </button>
             <button
               id="btn-weather-cloudy"
@@ -238,7 +241,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <CloudSun className="w-3.5 h-3.5" />
-              <span>Cloudy</span>
+              <span>{t.weatherCloudy}</span>
             </button>
             <button
               id="btn-weather-rainy"
@@ -250,7 +253,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <CloudRain className="w-3.5 h-3.5" />
-              <span>Rain</span>
+              <span>{t.weatherRain}</span>
             </button>
             <button
               id="btn-weather-night"
@@ -262,7 +265,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <Moon className="w-3.5 h-3.5" />
-              <span>Night</span>
+              <span>{t.weatherNight}</span>
             </button>
             <div className="h-4 w-px bg-white/10 mx-0.5" />
             <button
@@ -273,7 +276,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="px-2 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer shrink-0"
             >
               <Sun className="w-3 h-3 text-amber-400" />
-              <span>Forecast Hub</span>
+              <span>{t.forecastHub}</span>
             </button>
           </div>
 
@@ -281,7 +284,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center bg-black/40 backdrop-blur-md rounded-xl p-1 border border-white/[0.08] text-xs shrink-0">
             <span className="text-slate-400 px-2 flex items-center gap-1 text-[11px] font-mono">
               <Sparkles className="w-3 h-3 text-emerald-400" />
-              MODE:
+              {t.modeLabel}
             </span>
             <select
               id="select-system-mode"
@@ -290,11 +293,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               onChange={(e) => onModeChange(e.target.value as SystemModeType)}
               className="bg-transparent text-slate-200 text-xs font-semibold focus:outline-none focus-visible:ring-1 focus-visible:ring-emerald-400 rounded cursor-pointer pr-1"
             >
-              <option value="AI_AUTO" className="bg-slate-900 text-slate-100">AI Auto Optimizer</option>
-              <option value="PEAK_SHAVING" className="bg-slate-900 text-slate-100">Peak Shaving Mode</option>
-              <option value="GREEN_MAX" className="bg-slate-900 text-slate-100">100% Green Self-Supply</option>
-              <option value="STORM_GUARD" className="bg-slate-900 text-slate-100">Storm Guard / Backup</option>
-              <option value="MANUAL" className="bg-slate-900 text-slate-100">Manual Dispatch</option>
+              <option value="AI_AUTO" className="bg-slate-900 text-slate-100">{t.modeAiAuto}</option>
+              <option value="PEAK_SHAVING" className="bg-slate-900 text-slate-100">{t.modePeakShaving}</option>
+              <option value="GREEN_MAX" className="bg-slate-900 text-slate-100">{t.modeGreenMax}</option>
+              <option value="STORM_GUARD" className="bg-slate-900 text-slate-100">{t.modeStormGuard}</option>
+              <option value="MANUAL" className="bg-slate-900 text-slate-100">{t.modeManual}</option>
             </select>
           </div>
 
@@ -313,14 +316,30 @@ export const Navbar: React.FC<NavbarProps> = ({
             {isSimulating ? (
               <>
                 <Activity className="w-3.5 h-3.5 animate-pulse text-emerald-400" />
-                <span className="font-mono text-[11px]">LIVE</span>
+                <span className="font-mono text-[11px]">{t.liveTelemetry}</span>
               </>
             ) : (
               <>
                 <Play className="w-3.5 h-3.5 text-amber-400" />
-                <span className="font-mono text-[11px]">PAUSED</span>
+                <span className="font-mono text-[11px]">{t.pausedTelemetry}</span>
               </>
             )}
+          </button>
+
+          {/* Language Toggle Button (SIH 2024 Bilingual Mode) */}
+          <button
+            id="btn-toggle-language"
+            onClick={toggleLanguage}
+            title={t.langToggleTitle}
+            aria-label={t.langToggleTitle}
+            className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-emerald-500/15 hover:from-amber-500/25 hover:to-emerald-500/25 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center gap-1.5 transition backdrop-blur-md shadow-sm active:scale-95 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          >
+            <Languages className="w-3.5 h-3.5 text-amber-400" />
+            <span className="font-mono tracking-tight text-[11px] flex items-center gap-1">
+              <span className={language === 'en' ? 'text-amber-300 font-black' : 'text-slate-400'}>EN</span>
+              <span className="text-slate-500">/</span>
+              <span className={language === 'hi' ? 'text-emerald-300 font-black' : 'text-slate-400'}>हिंदी</span>
+            </span>
           </button>
 
           {/* Report Generator */}
@@ -332,7 +351,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             aria-label="Open Audit Report & Energy Accounting Modal"
           >
             <FileText className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Report</span>
+            <span>{t.auditReport}</span>
           </button>
 
           {/* SIH Hackathon Pitch Mode Button */}
@@ -344,7 +363,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             aria-label="Open SIH Presentation Deck"
           >
             <Award className="w-3.5 h-3.5 text-slate-950" />
-            <span className="font-mono">SIH Deck</span>
+            <span className="font-mono">{t.sihDeck}</span>
           </button>
 
           {/* Subscription & Plan Status Button */}
